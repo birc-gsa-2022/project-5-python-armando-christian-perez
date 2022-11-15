@@ -1,0 +1,23 @@
+name: GSA tests
+description: Run GSA tests
+runs:
+  using: composite
+  steps:
+      - name: Setting up Python environment for testing with GSA
+        uses: birc-gsa/gsa-test/setup@v1
+
+      - name: Running GSA tests
+        uses: birc-gsa/gsa-test/test@v1
+        id:   gsa-testing
+        with:
+          gsa-options: -v test .gsa/gsa-test.yaml -o gsa-results.txt
+
+      - name: Archiving debug info
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: gsa-results
+          path: |
+            gsa-results.txt
+            __TEST__
+          retention-days: 5

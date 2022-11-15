@@ -1,0 +1,11 @@
+name: Language specific unit tests
+description: Run Python unit tests
+runs:
+  using: composite
+  steps:
+    - name: DocTest checking
+      run: python3 -m doctest src/*.py
+      shell: bash
+    - name: PyTest checking
+      run: if ls src/test_*.py 2> /dev/null; then python3 -m pytest src; fi
+      shell: bash
