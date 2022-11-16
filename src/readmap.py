@@ -427,7 +427,6 @@ def matches_to_SAM(fasta_dict, fastq_dict, name, distance):
         rev_ranks = read_rank(rev_rank_line)
         for read_key in fastq_dict:
             D_table = compute_D_table(fastq_dict[read_key], rev_SA, buckets, rev_ranks)
-            print(e)
             matches = FM_approximate_match(fastq_dict[read_key], SA, buckets, ranks, D_table, distance)
             for match_cigar in matches:
                 reference_name.append(keys[i])
