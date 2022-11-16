@@ -339,37 +339,35 @@ def Smoke_cigar(CIGAR):
     for char in CIGAR[1:]:
         if char == prev:
             count += 1
-        elif count > 1:
+        else:
             RTEC += (str(count) + prev)
             count = 1
-        else:
-            RTEC += prev
-            count = 1
         prev = char
-    if count > 1:
-        RTEC += (str(count) + prev)
-    else:
-        RTEC += prev
+    
+    RTEC += (str(count) + prev)
     return RTEC
 
 def match(read, index, distance_left, CIGAR, lower, upper, buckets, ranks, D_table, operation):
     alphabet = "actg"
     output = []
+
     if operation == "M":
         for char in alphabet:
+
             upper_new = buckets[char] + ranks[char][upper] # Will break if read char is not in genome
             lower_new = buckets[char] + ranks[char][lower]
+
             if upper_new == lower_new:
                 continue
             if char != read[index - 1]:
                 edit_distance = distance_left - 1
             else:
                 edit_distance = distance_left
-            if D_table[index - 2] > edit_distance:
+            if D_table[index - 2] > edit_distance and (index - 2) > 0:
                 continue
             output.append((lower_new, upper_new, index - 1, "M" + CIGAR, edit_distance))
 
-    if operation == "I" and distance_left > 0 and D_table[index - 2] > (distance_left - 1):
+    if operation == "I" and distance_left > 0 and D_table[index - 2] < (distance_left - 1):
         output.append((lower, upper, index - 1, "I" + CIGAR, distance_left - 1))
 
     if operation == "D":
@@ -379,7 +377,7 @@ def match(read, index, distance_left, CIGAR, lower, upper, buckets, ranks, D_tab
             if upper_new == lower_new:
                 continue
             edit_distance = distance_left - 1
-            if D_table[index - 2] > edit_distance:
+            if D_table[index - 2] > edit_distance and (index - 2) > 0:
                 continue
             output.append((lower_new, upper_new, index, "D" + CIGAR, edit_distance))
     return output
@@ -427,6 +425,7 @@ def matches_to_SAM(fasta_dict, fastq_dict, name, distance):
         rev_ranks = read_rank(rev_rank_line)
         for read_key in fastq_dict:
             D_table = compute_D_table(fastq_dict[read_key], rev_SA, buckets, rev_ranks)
+
             matches = FM_approximate_match(fastq_dict[read_key], SA, buckets, ranks, D_table, distance)
             for match_cigar in matches:
                 reference_name.append(keys[i])
