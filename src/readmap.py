@@ -363,14 +363,15 @@ def match(read, index, distance_left, CIGAR, lower, upper, buckets, ranks, D_tab
                 edit_distance = distance_left - 1
             else:
                 edit_distance = distance_left
-            if D_table[index - 2] > edit_distance and (index - 2) > 0:
-                continue
-            if edit_distance < 0:
+            if (D_table[index - 2] > edit_distance and index >= 2) or edit_distance < 0:
                 continue
             output.append((lower_new, upper_new, index - 1, "M" + CIGAR, edit_distance))
 
-    if operation == "I" and D_table[index - 2] <= (distance_left - 1):
-        output.append((lower, upper, index - 1, "I" + CIGAR, distance_left - 1))
+    if operation == "I":
+        if index >=2 and D_table[index - 2] < (distance_left - 1):
+            pass
+        else:
+            output.append((lower, upper, index - 1, "I" + CIGAR, distance_left - 1))
 
     if operation == "D":
         for char in alphabet:
@@ -379,7 +380,7 @@ def match(read, index, distance_left, CIGAR, lower, upper, buckets, ranks, D_tab
             if upper_new == lower_new:
                 continue
             edit_distance = distance_left - 1
-            if D_table[index - 2] > edit_distance and (index - 2) > 0:
+            if D_table[index - 2] > edit_distance and index >= 2:
                 continue
             output.append((lower_new, upper_new, index, "D" + CIGAR, edit_distance))
     return output
