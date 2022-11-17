@@ -365,9 +365,11 @@ def match(read, index, distance_left, CIGAR, lower, upper, buckets, ranks, D_tab
                 edit_distance = distance_left
             if D_table[index - 2] > edit_distance and (index - 2) > 0:
                 continue
+            if edit_distance < 0:
+                continue
             output.append((lower_new, upper_new, index - 1, "M" + CIGAR, edit_distance))
 
-    if operation == "I" and distance_left > 0 and D_table[index - 2] < (distance_left - 1):
+    if operation == "I" and D_table[index - 2] <= (distance_left - 1):
         output.append((lower, upper, index - 1, "I" + CIGAR, distance_left - 1))
 
     if operation == "D":
@@ -390,6 +392,8 @@ def FM_approximate_match(read, SA, buckets, ranks, D_table, distance):
         return []
     stack = []
     stack.extend(match(read, len(read), distance, "", len(SA), 0, buckets, ranks, D_table, "M"))
+    if distance > 0:
+        stack.extend(match(read, len(read), distance, "", len(SA), 0, buckets, ranks, D_table, "I"))
     matches = []
     while stack:
         current = stack.pop()
@@ -425,7 +429,6 @@ def matches_to_SAM(fasta_dict, fastq_dict, name, distance):
         rev_ranks = read_rank(rev_rank_line)
         for read_key in fastq_dict:
             D_table = compute_D_table(fastq_dict[read_key], rev_SA, buckets, rev_ranks)
-
             matches = FM_approximate_match(fastq_dict[read_key], SA, buckets, ranks, D_table, distance)
             for match_cigar in matches:
                 reference_name.append(keys[i])
