@@ -368,7 +368,7 @@ def match(read, index, distance_left, CIGAR, lower, upper, buckets, ranks, D_tab
             output.append((lower_new, upper_new, index - 1, "M" + CIGAR, edit_distance))
 
     if operation == "I":
-        if index >=2 and D_table[index - 2] < (distance_left - 1):
+        if index >=2 and D_table[index - 2] > (distance_left - 1):
             pass
         else:
             output.append((lower, upper, index - 1, "I" + CIGAR, distance_left - 1))
