@@ -122,5 +122,4 @@ Works as expected, Linear, but slightly slower on bigger alphabet sizes. Also a 
 ![](Match_speed.png)
 All matches are done with edit distance 1.
 Matches are surprisingly slow, especially on small alphabets. This is expected, as the amount of matches, and therefore the size of the recursive stack, will be very big for an alphabet of size 1. Comparatively, it is much faster on alphabets of bigger sizes, for the alphabet size 8 it doesn't grow beyond the minimum python timing even up to size 256.
-*List experiments and results that illustrates the running time. Add figures by embedding them here, as you learned how to do in project 1.*
 
