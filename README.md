@@ -103,18 +103,25 @@ Once you have implemented the `readmap` program (and tested it to the best of yo
 # Report
 
 ## Algorithm
-
+I used ukkonens algorithm to construct a suffix tree, which i ran through to get a suffix array. I used BWT to match the suffix array, and i constructed a D table by simple inverting the genome and constructing the necessary structures from this (in preprocessing).
 *Which algorithm did you use for read mapping?*
 
 ## Insights you may have had while implementing the algorithm
+None.
 
 ## Problems encountered if any
+Lots of small problems, e.g. putting the wrong operator (> instead of <) resulting in getting the right results, but missing a single readmapping.
 
 ## Validation
-
+Mississippi, but also on the github tests.
 *How did you validate that the algorithm works?*
 
 ## Running time
+![](BWT_construction.png)
+Works as expected, Linear, but slightly slower on bigger alphabet sizes. Also a bit slow overall, which is sad. I'd hoped it would be realistic to run on a real genome, but alas..
 
-*List experiments and results that illustrates the running time. Add figures by embedding them here, as you learned how to do in project 1.*
+
+![](BWAMatch_speed.png)
+All matches are done with edit distance 1.
+Matches are surprisingly slow, especially on small alphabets. This is expected, as the amount of matches, and therefore the size of the recursive stack, will be very big for an alphabet of size 1. Comparatively, it is much faster on alphabets of bigger sizes, for the alphabet size 8 it doesn't grow beyond the minimum python timing even up to size 256.
 
