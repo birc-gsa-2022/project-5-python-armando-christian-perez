@@ -119,7 +119,7 @@ Mississippi, but also on the github tests.
 ## Running time
 ![](BWT_construction.png)
 Works as expected, Linear, but slightly slower on bigger alphabet sizes. Also a bit slow overall, which is sad. I'd hoped it would be realistic to run on a real genome, but alas..
-![](Match_speed.png)
+![](BWAMatch_speed.png)
 All matches are done with edit distance 1.
 Matches are surprisingly slow, especially on small alphabets. This is expected, as the amount of matches, and therefore the size of the recursive stack, will be very big for an alphabet of size 1. Comparatively, it is much faster on alphabets of bigger sizes, for the alphabet size 8 it doesn't grow beyond the minimum python timing even up to size 256.
 
